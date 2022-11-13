@@ -1,14 +1,79 @@
-* {
+html {
+  /* Box Sizing
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing
+   * The `border-box` is used for telling the browser,
+   * that all width/height you set is already including all border and padding.
+   * It means we will never see the element overflowed just because we set border/padding.
+   */
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  font-size: 14px;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
+  margin-bottom: 0.3em;
+  line-height: 1.3em;
+}
+
+h1 {
+  font-size: 2.5em; /* 35px */
+}
+
+h2 {
+  font-size: 2.25em; /* 31.5px */
+}
+
+h3 {
+  font-size: 2rem; /* 28px */
+}
+
+h4 {
+  font-size: 1.75em; /* 24.5px */
+}
+
+h5 {
+  font-size: 1.5em; /* 21px */
+}
+
+h6 {
+  font-size: 1.25em; /* 17.5px */
+}
+
+p {
+  font-size: 1em; /* 14px */
+}
+
+small {
+  font-size: 0.8em; /* 11.2px */
+}
+
+.strong {
+  font-weight: 500;
 }
