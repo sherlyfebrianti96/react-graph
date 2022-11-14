@@ -1,11 +1,22 @@
+import styled from "@emotion/styled";
+import { Divider } from "@mui/material";
 import "./App.css";
+import { Connectivity } from "./component/Connectivity/Connectivity";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
+    <CustomApp>
       <h1>Graph using React</h1>
-    </div>
+      <CustomDivider />
+      <Connectivity />
+    </CustomApp>
   );
-}
+};
 
-export default App;
+const CustomApp = styled.div`
+  padding: 3em 5em;
+`;
+
+const CustomDivider = styled(Divider)`
+  margin: 30px 0;
+`;
