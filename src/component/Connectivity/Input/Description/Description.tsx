@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const InputDescription = () => {
+export const ConnectivityInputDescription = () => {
   return (
     <CustomInputDescription>
       Here is tips for you to build your graphs :

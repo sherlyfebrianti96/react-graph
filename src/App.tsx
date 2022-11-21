@@ -1,14 +1,15 @@
 import styled from "@emotion/styled";
 import { Divider } from "@mui/material";
 import "./App.css";
-import { Connectivity } from "./component/Connectivity/Connectivity";
+import { Bipartite } from "./component/Graph/Bipartite/Bipartite";
 
 export const App = () => {
   return (
     <CustomApp>
       <h1>Graph using React</h1>
       <CustomDivider />
-      <Connectivity />
+
+      <Bipartite />
     </CustomApp>
   );
 };
