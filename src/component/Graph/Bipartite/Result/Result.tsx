@@ -12,11 +12,7 @@ interface GraphValue {
 }
 
 export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
-  /* Uppercase alphabets */
-  const alphabets = Array.from({ length: 26 }, (_, i) =>
-    String.fromCharCode(i + 65)
-  );
-
+  /* Change all alphabets to uppercase to make it in-case-sensitive */
   const input = props.input.toUpperCase();
 
   /**
