@@ -43,7 +43,7 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
   });
 
   console.log("debug graph : ", graph);
-  
+
   let activeDefault = NodeStatus.Normal;
 
   input
@@ -120,20 +120,27 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
 
   let currentStatusComparator = NodeStatus.Default;
 
+  let totalNodeWithoutEdge = 0;
+
   graph.forEach((nodeValue, nodeName) => {
+    /* Get the Bipartite data */
     if (nodeValue.status === currentStatusComparator) {
       isBipartite = false;
     } else {
       currentStatusComparator = nodeValue.status;
     }
-  });
 
-  console.log("debug isBipartite : ", isBipartite);
+    /* Get the Disconnected Graph data */
+    if (nodeValue.edge.size === 0) {
+      totalNodeWithoutEdge++;
+    }
+  });
 
   /**
    * Disconnected Graph
    * This condition matched when there is more than 1 Nodes without the continual Edge
    */
+  const isDisconnectedGraph = totalNodeWithoutEdge > 1;
 
   // const graphNode = document.createElement("div");
 
@@ -166,8 +173,17 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
 
   return (
     <>
-      <div>RESULT!!!</div>
-      {/* {graphNode} */}
+      <h5>RESULT</h5>
+      <p>
+        That is{isDisconnectedGraph && " not"} a connected graph
+        {!isDisconnectedGraph && (
+          <span>
+            {isBipartite
+              ? " and red-blue colorable graph"
+              : ", but not red blue colorable."}
+          </span>
+        )}
+      </p>
     </>
   );
 };
