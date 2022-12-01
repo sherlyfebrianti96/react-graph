@@ -43,6 +43,8 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
   });
 
   console.log("debug graph : ", graph);
+  
+  let activeDefault = NodeStatus.Normal;
 
   input
     /* Only get the non-empty value to the array */
@@ -67,7 +69,14 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
         /* Mark the visited Node Status */
         switch (currentNode.status) {
           case NodeStatus.Default:
-            currentNode.status = NodeStatus.Normal;
+            currentNode.status = activeDefault;
+
+            /* Change the active Default for the next iteration */
+            if (activeDefault === NodeStatus.Highlight) {
+              activeDefault = NodeStatus.Normal;
+            } else {
+              activeDefault = NodeStatus.Highlight;
+            }
             break;
           case NodeStatus.Normal:
             currentNode.status = NodeStatus.Highlight;
@@ -104,13 +113,26 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
   console.log("debug graph : ", graph);
 
   /**
-   * Disconnected Graph
-   * This condition matched when there is more than 1 Nodes without the continual Edge
+   * Bipartite/2-colorable Graph
+   * This condition matched when the Highlighted color and the Normal color is shining simultaneously
    */
+  let isBipartite = true;
+
+  let currentStatusComparator = NodeStatus.Default;
+
+  graph.forEach((nodeValue, nodeName) => {
+    if (nodeValue.status === currentStatusComparator) {
+      isBipartite = false;
+    } else {
+      currentStatusComparator = nodeValue.status;
+    }
+  });
+
+  console.log("debug isBipartite : ", isBipartite);
 
   /**
-   * Bipartite/2-colorable Graph
-   * This condition matched when one of the Node's status is Highlighted
+   * Disconnected Graph
+   * This condition matched when there is more than 1 Nodes without the continual Edge
    */
 
   // const graphNode = document.createElement("div");
