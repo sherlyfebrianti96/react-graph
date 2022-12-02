@@ -40,72 +40,204 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
 
   console.log("debug graph : ", graph);
 
-  let activeDefault = NodeStatus.Normal;
+  // let activeDefault = NodeStatus.Normal;
 
-  input
+  // input
+  //   /* Only get the non-empty value to the array */
+  //   .split(/[,\n]+/gm)
+  //   /* Only get the non-empty value to the array */
+  //   .filter((node) => node)
+  //   /* Process the groups */
+  //   .map((group) => {
+  //     /* Process the nodes */
+  //     const groupNodes = group
+  //       .split("-")
+  //       /* Only get the non-empty value to the array */
+  //       .filter((node) => node);
+
+  //     console.log("debug --------------- ");
+  //     console.log("debug groupNodes : ", groupNodes);
+
+  //     groupNodes.map((node, index) => {
+  //       const currentNode = { ...(graph.get(node) as GraphValue) };
+  //       console.log("debug currentNode : ", currentNode);
+
+  //       /* Mark the visited Node Status */
+  //       switch (currentNode.status) {
+  //         case NodeStatus.Default:
+  //           currentNode.status = activeDefault;
+
+  //           /* Change the active Default for the next iteration */
+  //           if (activeDefault === NodeStatus.Highlight) {
+  //             activeDefault = NodeStatus.Normal;
+  //           } else {
+  //             activeDefault = NodeStatus.Highlight;
+  //           }
+  //           break;
+  //         case NodeStatus.Normal:
+  //           currentNode.status = NodeStatus.Highlight;
+  //           break;
+  //         case NodeStatus.Highlight:
+  //           currentNode.status = NodeStatus.Normal;
+  //           break;
+  //         default:
+  //           break;
+  //       }
+
+  //       /**
+  //        * Update Edge
+  //        * This will update the connected Edge with the next Node (Vertex)
+  //        */
+  //       const nextNode = groupNodes[index + 1];
+  //       console.log("debug nextNode : ", nextNode);
+  //       if (nextNode) {
+  //         const currentEdge = new Set(currentNode.edge);
+  //         currentEdge.add(nextNode);
+
+  //         currentNode.edge = currentEdge;
+  //       }
+  //       console.log("debug updated currentNode : ", currentNode);
+
+  //       /* Update the Graph with the updated data */
+  //       graph.set(node, currentNode);
+
+  //       return node;
+  //     });
+
+  //     return group;
+  //   });
+  // console.log("debug graph : ", graph);
+
+  const groups = input
     /* Only get the non-empty value to the array */
     .split(/[,\n]+/gm)
     /* Only get the non-empty value to the array */
-    .filter((node) => node)
-    /* Process the groups */
-    .map((group) => {
-      /* Process the nodes */
-      const groupNodes = group
-        .split("-")
-        /* Only get the non-empty value to the array */
-        .filter((node) => node);
+    .filter((node) => node);
+  console.log("debug groups : ", groups);
 
-      console.log("debug --------------- ");
-      console.log("debug groupNodes : ", groupNodes);
+  /* Get the nodes for the graph */
+  const processNodesToGraph = (
+    graph: Map<string, GraphValue>,
+    groupNodes: string[],
+    activeDefaultStatus: NodeStatus
+  ) => {
+    /* Process the nodes one by one */
+    const currentNode = groupNodes[0];
 
-      groupNodes.map((node, index) => {
-        const currentNode = { ...(graph.get(node) as GraphValue) };
-        console.log("debug currentNode : ", currentNode);
+    const nodeValue = { ...(graph.get(currentNode) as GraphValue) };
 
-        /* Mark the visited Node Status */
-        switch (currentNode.status) {
-          case NodeStatus.Default:
-            currentNode.status = activeDefault;
+    let nextActiveDefaultStatus = activeDefaultStatus;
 
-            /* Change the active Default for the next iteration */
-            if (activeDefault === NodeStatus.Highlight) {
-              activeDefault = NodeStatus.Normal;
-            } else {
-              activeDefault = NodeStatus.Highlight;
-            }
-            break;
-          case NodeStatus.Normal:
-            currentNode.status = NodeStatus.Highlight;
-            break;
-          case NodeStatus.Highlight:
-            currentNode.status = NodeStatus.Normal;
-            break;
-          default:
-            break;
+    /* Mark the visited Node Status */
+    switch (nodeValue.status) {
+      case NodeStatus.Default:
+        nodeValue.status = activeDefaultStatus;
+
+        /* Change the active Default for the next iteration */
+        if (activeDefaultStatus === NodeStatus.Highlight) {
+          nextActiveDefaultStatus = NodeStatus.Normal;
+        } else {
+          nextActiveDefaultStatus = NodeStatus.Highlight;
         }
+        break;
+      case NodeStatus.Normal:
+        nodeValue.status = NodeStatus.Highlight;
+        break;
+      case NodeStatus.Highlight:
+        nodeValue.status = NodeStatus.Normal;
+        break;
+      default:
+        break;
+    }
 
-        /**
-         * Update Edge
-         * This will update the connected Edge with the next Node (Vertex)
-         */
-        const nextNode = groupNodes[index + 1];
-        console.log("debug nextNode : ", nextNode);
-        if (nextNode) {
-          const currentEdge = new Set(currentNode.edge);
-          currentEdge.add(nextNode);
+    /**
+     * Update Edge
+     * This will update the connected Edge with the next Node (Vertex)
+     */
+    const nextNode = groupNodes[1];
+    console.log("debug nextNode : ", nextNode);
+    if (nextNode) {
+      const currentEdge = new Set(nodeValue.edge);
+      currentEdge.add(nextNode);
 
-          currentNode.edge = currentEdge;
-        }
-        console.log("debug updated currentNode : ", currentNode);
+      nodeValue.edge = currentEdge;
+    }
+    console.log("debug updated nodeValue : ", nodeValue);
 
-        /* Update the Graph with the updated data */
-        graph.set(node, currentNode);
+    /* Update the Graph with the updated data */
+    graph.set(currentNode, nodeValue);
 
-        return node;
-      });
+    /* Proceed to the next item */
+    if (groupNodes.length > 1) {
+      processNodesToGraph(
+        graph,
+        groupNodes.slice(1, groupNodes.length + 1),
+        nextActiveDefaultStatus
+      );
+    }
+  };
 
-      return group;
-    });
+  /* Process the groups */
+  groups.map((group) => {
+    /* Process the nodes */
+    const groupNodes = group
+      .split("-")
+      /* Only get the non-empty value to the array */
+      .filter((node) => node);
+
+    console.log("debug --------------- ");
+    console.log("debug groupNodes : ", groupNodes);
+
+    processNodesToGraph(graph, groupNodes, NodeStatus.Normal);
+
+    // groupNodes.map((node, index) => {
+    //   const currentNode = { ...(graph.get(node) as GraphValue) };
+    //   console.log("debug currentNode : ", currentNode);
+
+    //   /* Mark the visited Node Status */
+    //   switch (currentNode.status) {
+    //     case NodeStatus.Default:
+    //       currentNode.status = activeDefault;
+
+    //       /* Change the active Default for the next iteration */
+    //       if (activeDefault === NodeStatus.Highlight) {
+    //         activeDefault = NodeStatus.Normal;
+    //       } else {
+    //         activeDefault = NodeStatus.Highlight;
+    //       }
+    //       break;
+    //     case NodeStatus.Normal:
+    //       currentNode.status = NodeStatus.Highlight;
+    //       break;
+    //     case NodeStatus.Highlight:
+    //       currentNode.status = NodeStatus.Normal;
+    //       break;
+    //     default:
+    //       break;
+    //   }
+
+    //   /**
+    //    * Update Edge
+    //    * This will update the connected Edge with the next Node (Vertex)
+    //    */
+    //   const nextNode = groupNodes[index + 1];
+    //   console.log("debug nextNode : ", nextNode);
+    //   if (nextNode) {
+    //     const currentEdge = new Set(currentNode.edge);
+    //     currentEdge.add(nextNode);
+
+    //     currentNode.edge = currentEdge;
+    //   }
+    //   console.log("debug updated currentNode : ", currentNode);
+
+    //   /* Update the Graph with the updated data */
+    //   graph.set(node, currentNode);
+
+    //   return node;
+    // });
+
+    return group;
+  });
   console.log("debug graph : ", graph);
 
   /**
