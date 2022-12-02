@@ -49,7 +49,6 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
 
   /* Get the nodes for the graph */
   const processNodesToGraph = (
-    graph: Map<string, GraphValue>,
     groupNodes: string[],
     activeDefaultStatus: NodeStatus
   ) => {
@@ -102,7 +101,6 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
     /* Proceed to the next item */
     if (groupNodes.length > 1) {
       processNodesToGraph(
-        graph,
         groupNodes.slice(1, groupNodes.length + 1),
         nextActiveDefaultStatus
       );
@@ -120,7 +118,7 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
     console.log("debug --------------- ");
     console.log("debug groupNodes : ", groupNodes);
 
-    processNodesToGraph(graph, groupNodes, NodeStatus.Normal);
+    processNodesToGraph(groupNodes, NodeStatus.Normal);
 
     return group;
   });
