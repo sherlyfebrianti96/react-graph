@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from "@emotion/styled";
+import { Divider } from "@mui/material";
+import "./App.css";
+import { Bipartite } from "./component/Graph/Bipartite/Bipartite";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <CustomApp>
+      <h1>Graph using React</h1>
+      <CustomDivider />
 
-export default App;
+      <Bipartite />
+    </CustomApp>
+  );
+};
+
+const CustomApp = styled.div`
+  padding: 3em 5em;
+`;
+
+const CustomDivider = styled(Divider)`
+  margin: 30px 0;
+`;
