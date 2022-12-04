@@ -156,22 +156,39 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
     graphToProcess: Map<string, GraphValue>,
     nodeToSearch: string
   ): boolean => {
-    let connectedNodes: GraphValue | undefined;
-    let connectedNodesName: string = "";
+    const connectedNodesArr: Array<{
+      nodeName: string;
+      nodeValue: GraphValue;
+    }> = [];
 
+    /* Get and check every connected nodes */
     graphToProcess.forEach((nodeValue, nodeName) => {
       if (nodeValue.edge.has(nodeToSearch)) {
-        connectedNodes = nodeValue;
-        connectedNodesName = nodeName;
+        connectedNodesArr.push({ nodeValue, nodeName });
+      }
+    });
+    console.log("debug connectedNodesArr : ", connectedNodesArr);
+
+    /* Checking every connected Node and see if they are connected to another nodes */
+    let isConnected = false;
+    connectedNodesArr.forEach((connectedNode) => {
+      if (connectedNode.nodeValue.edge.size === 1) {
+        /* It means we need to check the the connectivity of the connected node again */
+        const isConnectedNodeOfConnectedNode = isConnectedNode(
+          graphToProcess,
+          connectedNode.nodeName
+        );
+        if (isConnectedNodeOfConnectedNode) {
+          isConnected = true;
+        }
+      }
+
+      if (!!connectedNode.nodeValue && connectedNode.nodeValue.edge.size > 1) {
+        isConnected = true;
       }
     });
 
-    if (connectedNodes?.edge.size === 1) {
-      /* It means we need to check the the connectivity of the connected node again */
-      return isConnectedNode(graphToProcess, connectedNodesName);
-    }
-
-    return !!connectedNodes && connectedNodes.edge.size > 1;
+    return isConnected;
   };
 
   let totalDisconnectedNode = 0;
