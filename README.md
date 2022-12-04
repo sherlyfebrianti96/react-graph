@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Graph Documentation
+
+Here is the documentation of the implemented Graphs :
+
+- [Connected Graph and Disconnected Graph](./src/component/Graph/Sample/Connected-Disconnected%20Graph/README.md)
+
 ## Available Scripts
 
 In the project directory, you can run:
