@@ -132,7 +132,7 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
 
   let currentStatusComparator = NodeStatus.Default;
 
-  let totalNodeWithoutEdge = 0;
+  let nodesWithoutEdge: Array<string> = [];
 
   graph.forEach((nodeValue, nodeName) => {
     /* Get the Bipartite data */
@@ -144,15 +144,69 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
 
     /* Get the Disconnected Graph data */
     if (nodeValue.edge.size === 0) {
-      totalNodeWithoutEdge++;
+      nodesWithoutEdge.push(nodeName);
     }
   });
 
+  console.log("debug --------------- ");
+  console.log("debug --------------- ");
+  console.log("debug nodesWithoutEdge : ", nodesWithoutEdge);
+
+  const isConnectedNode = (
+    graphToProcess: Map<string, GraphValue>,
+    nodeToSearch: string
+  ): boolean => {
+    let connectedNodes: GraphValue | undefined;
+    let connectedNodesName: string = "";
+
+    graphToProcess.forEach((nodeValue, nodeName) => {
+      if (nodeValue.edge.has(nodeToSearch)) {
+        connectedNodes = nodeValue;
+        connectedNodesName = nodeName;
+      }
+    });
+
+    if (connectedNodes?.edge.size === 1) {
+      /* It means we need to check the the connectivity of the connected node again */
+      return isConnectedNode(graphToProcess, connectedNodesName);
+    }
+
+    return !!connectedNodes && connectedNodes.edge.size > 1;
+  };
+
+  let totalDisconnectedNode = 0;
+  if (nodesWithoutEdge.length > 1) {
+    /**
+     * If the Node (e.g. node X) does not have the continual Edge,
+     * we need to check the node that is connected to this node (e.g. node Y).
+     *
+     * If there is no node that have this node Y, it means this Y does not connected to anywhere
+     * */
+    nodesWithoutEdge.map((nodeName) => {
+      const nodeThatConnectedToThisNode = isConnectedNode(graph, nodeName);
+      console.log(
+        "debug nodeThatConnectedToThisNode : ",
+        nodeThatConnectedToThisNode
+      );
+
+      /**
+       * If the connectedNode only have this node as the linked Edge,
+       * it means it is not connected to anyone
+       */
+      if (!nodeThatConnectedToThisNode) {
+        /* It means it the connected Node only have this Node as the connected edge */
+        totalDisconnectedNode++;
+      }
+
+      return nodesWithoutEdge;
+    });
+  }
+
   /**
    * Disconnected Graph
-   * This condition matched when there is more than 1 Nodes without the continual Edge
+   * This condition matched when there is more than 1 Disconnected Node
    */
-  const isDisconnectedGraph = totalNodeWithoutEdge > 1;
+  const isDisconnectedGraph = totalDisconnectedNode > 0;
 
   // const graphNode = document.createElement("div");
 
