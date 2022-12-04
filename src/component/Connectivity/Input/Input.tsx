@@ -23,7 +23,7 @@ export const ConnectivityInput = ({
      * , : Comma (represent Path Separator)
      * \n : Newline (represent Path Separator)
      */
-    const regex = /[a-z-,\n]+/gm;
+    const regex = /[a-zA-Z-,\n]+/gm;
 
     const input = (evt.target as HTMLTextAreaElement).value;
 
