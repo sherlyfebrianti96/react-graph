@@ -1,6 +1,7 @@
 import { NodeStatus } from "../../../../enum/NodeStatus";
 
 import d3 from "d3";
+import styled from "@emotion/styled";
 
 interface BipartiteResultProps {
   input: string;
@@ -257,16 +258,39 @@ export const BipartiteResult = ({ ...props }: BipartiteResultProps) => {
   return (
     <>
       <h5>RESULT</h5>
-      <p>
-        That is{isDisconnectedGraph && " not"} a connected graph
+      <CustomParagraph>
+        That is
+        <span className={`highlight-${isDisconnectedGraph ? "red" : "green"}`}>
+          {isDisconnectedGraph && " not"} a connected graph
+        </span>
         {!isDisconnectedGraph && (
           <span>
-            {isBipartite
-              ? " and red-blue colorable graph"
-              : ", but not red blue colorable."}
+            {isBipartite ? (
+              <span>
+                &nbsp;and&nbsp;
+                <span className="highlight-green">
+                  red-blue colorable graph
+                </span>
+              </span>
+            ) : (
+              <span>
+                , but&nbsp;
+                <span className="highlight-red">not red blue colorable</span>.
+              </span>
+            )}
           </span>
         )}
-      </p>
+      </CustomParagraph>
     </>
   );
 };
+
+const CustomParagraph = styled.p`
+  .highlight-red {
+    color: #f44336;
+  }
+
+  .highlight-green {
+    color: #009688;
+  }
+`;
